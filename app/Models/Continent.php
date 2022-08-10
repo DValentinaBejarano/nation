@@ -7,5 +7,41 @@ use Illuminate\Database\Eloquent\Model;
 
 class Continent extends Model
 {
+    //la tabla a conectar
+
+    protected $table ="continents";
+
+    //clave primaria de la tabla
+
+    protected $primaryKey = "continent_id";
+
+
+
+    //omitir campos de auditoria
+    public $timestaps = false;
     use HasFactory;
+
+    //Relacion entre continente y sus regiones
+
+    public function regiones(){
+
+        // parameters
+        // 1. Linked model
+        // 2. Foreign key of current model 
+        // into related model Region
+        return $this->hasMany(Region::class,'continent_id');
+    }
+
+    //Relacion entre continentes y paises
+    //continent:abuelo
+    //country:nieto
+    public function paises(){
+        //parameter
+        //1- Nieto 
+        return $this->hasManyThrough( Country::class,
+                                      Region::class,
+                                      'continent_id',
+                                      'region_id');
+
+    }
 }
